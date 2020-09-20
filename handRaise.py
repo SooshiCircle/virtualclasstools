@@ -9,7 +9,7 @@ def checkForHandRaised(coords):
 
         good = 0
         for i in range(90):
-            if abs(x[i] -avgx) < 15 and abs(y[i] -avgy) < 15:
+            if abs(x[i] - avgx) < 15 and abs(y[i] - avgy) < 15:
                 good += 1
         if good > 80:
             return True

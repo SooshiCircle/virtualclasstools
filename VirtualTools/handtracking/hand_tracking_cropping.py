@@ -9,6 +9,10 @@ COORDS_BOOL = True
 PAINT_BOOL = True
 STROKE_BOOL = True
 STROKES = []
+CENTERS = []
+GOODNESS = 25
+RAISED_THRESH = 200
+CHECK_LEN = 30
 
 def dist(l1, l2):
     return ((l1[0] - l2[0])**2 + (l1[1] - l2[1])**2)**(1/2)
@@ -23,6 +27,26 @@ def rescale_frame(frame, percent):
     width = int(frame.shape[1] * percent / 100)
     height = int(frame.shape[0] * percent / 100)
     return cv2.resize(frame, (width, height), interpolation=cv2.INTER_AREA)
+
+def hand_raised(coords):
+    if len(coords) >= CHECK_LEN:
+        # print(coords)
+        l = coords[-CHECK_LEN: len(coords)]
+        # print(l)
+        x = [i[0] for i in l]
+        y = [i[1] for i in l]
+
+        avgx = sum(x)/len(x)
+        avgy = sum(y)/len(y)
+
+        good = 0
+        for i in range(CHECK_LEN):
+            if abs(x[i] - avgx) < RAISED_THRESH and abs(y[i] - avgy) < RAISED_THRESH:
+                good += 1
+        if good > GOODNESS:
+            return True
+        else:
+            return False
 
 detection_graph, sess = detector_utils.load_inference_graph()
 
@@ -57,9 +81,13 @@ if __name__ == "__main__":
         COORDS = []
         detector_utils.draw_box_on_image(num_hands_detect, SCORE_THRESH,
                                          scores, boxes, im_width, im_height,
-                                         frame, CROP_COUNTER, COORDS)
-        if paintCoords == [] and STROKES == []:
-            print("AHAAA")
+                                         frame, CROP_COUNTER, COORDS, CENTERS)
+        if hand_raised(CENTERS):
+            # print("CENTERS: {}".format(len(CENTERS)))
+            print("HAND IS RAISED")
+
+        # if paintCoords == [] and STROKES == []:
+            # print("AHAAA")
         if STROKE_BOOL:
             if paintCoords != None:
                 for i in COORDS:
@@ -77,14 +105,14 @@ if __name__ == "__main__":
                 STROKE_BOOL = False
                 STROKES.append(paintCoords.copy())
                 paintCoords = []
-                print("here s T")
+                # print("here s T")
             else:
                 STROKE_BOOL = True
-                print("here s F")
+                # print("here s F")
         if cv2.waitKey(25) & 0xFF == ord('c'):
             paintCoords = []
             STROKES = []
-            print("here c")
+            # print("here c")
         if cv2.waitKey(25) & 0xFF == ord('q'):
             cv2.destroyAllWindows()
             break

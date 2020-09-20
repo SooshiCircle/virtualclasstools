@@ -51,7 +51,7 @@ def load_inference_graph():
 
 # draw the detected bounding boxes on the images
 # You can modify this to also draw a label.
-def draw_box_on_image(num_hands_detect, score_thresh, scores, boxes, im_width, im_height, image_np, CROP_COUNTER, COORDS):
+def draw_box_on_image(num_hands_detect, score_thresh, scores, boxes, im_width, im_height, image_np, CROP_COUNTER, COORDS, CENTERS):
     for i in range(num_hands_detect):
         if (scores[i] > score_thresh):
             (left, right, top, bottom) = (boxes[i][1] * im_width, boxes[i][3] * im_width,
@@ -68,7 +68,9 @@ def draw_box_on_image(num_hands_detect, score_thresh, scores, boxes, im_width, i
 
             if (COORDS != None):
                 COORDS.append((int(right), int(top)))
-                print(p1)
+                # print(p1)
+            
+            CENTERS.append((int((left + right) / 2), int((top + bottom) / 2)))
 
 
 # Show fps value on image.
