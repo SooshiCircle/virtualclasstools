@@ -1,5 +1,5 @@
 import cv2
-from utils import handtracking/detector_utils
+from handtracking.utils import detector_utils
 
 
 ERROR_THRESH = 200
