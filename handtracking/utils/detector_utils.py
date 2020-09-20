@@ -71,6 +71,8 @@ def draw_box_on_image(num_hands_detect, score_thresh, scores, boxes, im_width, i
                 # print(p1)
             
             CENTERS.append((int((left + right) / 2), int((top + bottom) / 2)))
+            return True
+    return False
 
 
 # Show fps value on image.

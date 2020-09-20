@@ -1,5 +1,5 @@
 import cv2
-from utils import handtracking/detector_utils
+from handtracking.utils import detector_utils
 
 
 ERROR_THRESH = 200
@@ -13,6 +13,7 @@ CENTERS = []
 GOODNESS = 25
 RAISED_THRESH = 200
 CHECK_LEN = 30
+DETECTED = []
 
 def dist(l1, l2):
     return ((l1[0] - l2[0])**2 + (l1[1] - l2[1])**2)**(1/2)
@@ -65,12 +66,11 @@ if __name__ == "__main__":
     cap.set(cv2.CAP_PROP_FRAME_WIDTH, 320)
     cap.set(cv2.CAP_PROP_FRAME_HEIGHT, 180)
     im_width, im_height = (cap.get(3), cap.get(4))
-
     num_hands_detect = 1 # max number of hands to detect
 
     while True:
         ret, frame = cap.read()
-#         frame = rescale_frame(frame, 30)
+#         frame = rescale_frame(frame, 50)
         try:
             frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
         except:
@@ -79,12 +79,18 @@ if __name__ == "__main__":
         boxes, scores = detector_utils.detect_objects(frame, detection_graph, sess)
 
         COORDS = []
-        detector_utils.draw_box_on_image(num_hands_detect, SCORE_THRESH,
+        det = detector_utils.draw_box_on_image(num_hands_detect, SCORE_THRESH,
                                          scores, boxes, im_width, im_height,
                                          frame, CROP_COUNTER, COORDS, CENTERS)
-        if hand_raised(CENTERS):
+        
+        DETECTED.append(det)
+        if len(DETECTED) > 5 and DETECTED[-5: len(DETECTED)] == [0, 0, 0, 0, 0]:
+            print("HAND IS NOT RAISED")
+        elif hand_raised(CENTERS):
             # print("CENTERS: {}".format(len(CENTERS)))
             print("HAND IS RAISED")
+        else:
+            print("HAND IS NOT RAISED")
 
         # if paintCoords == [] and STROKES == []:
             # print("AHAAA")
@@ -100,7 +106,8 @@ if __name__ == "__main__":
                 cv2.line(frame, pt1=(stroke[point][0], stroke[point][1]), pt2=(stroke[point + 1][0], stroke[point + 1][1]), color=(0, 0, 255), thickness=8)
 
         cv2.imshow('hand_tracking', cv2.flip(cv2.cvtColor(frame, cv2.COLOR_RGB2BGR), 1))
-        if cv2.waitKey(25) & 0xFF == ord('s'):
+        k = cv2.waitKey(75)
+        if k & 0xFF == ord('s'):
             if STROKE_BOOL:
                 STROKE_BOOL = False
                 STROKES.append(paintCoords.copy())
@@ -109,10 +116,10 @@ if __name__ == "__main__":
             else:
                 STROKE_BOOL = True
                 # print("here s F")
-        if cv2.waitKey(25) & 0xFF == ord('c'):
+        if k & 0xFF == ord('c'):
             paintCoords = []
             STROKES = []
             # print("here c")
-        if cv2.waitKey(25) & 0xFF == ord('q'):
+        if k & 0xFF == ord('q'):
             cv2.destroyAllWindows()
             break
