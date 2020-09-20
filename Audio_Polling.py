@@ -1,4 +1,4 @@
-import numpy
+import numpy as np
 import speech_recognition as sr
 from sklearn.metrics.pairwise import cosine_similarity as sim
 from gensim.models.keyedvectors import KeyedVectors
@@ -6,16 +6,28 @@ from collections import Counter
 
 # Speech to text using speech recognition API
 
+# +
+def loadGlove(path):
+    """
+    Load pretrained GloVe embeddings that map word -> embedding
+    """
+    glove = KeyedVectors.load_word2vec_format(path, binary=False)
+    return glove
+
+glove = loadGlove("/Users/MeganFrisella/GitHub/virtualclasstools/glove.6B.300d.txt.w2v")
+
+
+# -
+
 def speechToText():
     """
     Perform speech to text transcription using SpeechRecognition API
     """
     with sr.Microphone() as source:
-        print("Begin speaking")
+        print("Listening...")
         audio = sr.Recognizer().listen(source)
     try:
         speech = sr.Recognizer().recognize_google(audio).lower()
-        print("Speech: " + speech)
     except sr.UnknownValueError:
         print("Couldn't understand audio")
     return speech
@@ -28,8 +40,8 @@ def getStopWords(path):
     """
     with open(path) as dat:
         stops = []
-    for line in dat:
-        stops += [word.strip() for word in line.split('\t')]
+        for line in dat:
+            stops += [word.strip() for word in line.split('\t')]
     return stops
 
 def cleanDocs(docs, stops):
@@ -79,7 +91,7 @@ def tf_idf(vocab, cleaned_docs):
     """
     Compute the tf_idf values for each word in each document
     """
-    tfs = np.array([tf(doc, vocab) for doc in cleaned_answers])
+    tfs = np.array([tf(doc, vocab) for doc in cleaned_docs])
     idfs = idf(cleaned_docs, vocab)
     tf_idf = tfs * idfs
     return tf_idf
@@ -95,13 +107,6 @@ def printBestWord(tf_idf, vocab):
         print(f"answer {i+1}: {vocab[idx]}")
 
 # Assesing response similarity to other students using GloVe embeddings
-        
-def loadGlove(path):
-    """
-    Load pretrained GloVe embeddings that map word -> embedding
-    """
-    glove = KeyedVectors.load_word2vec_format(path, binary=False)
-    return glove
 
 def embedDocs(cleaned_docs, glove, glove_dim): 
     """
@@ -134,6 +139,8 @@ def main(docs):
     printBestWord(tf_idfs, vocab)
     
     # GloVe assessment
-    glove = loadGlove("/Users/MeganFrisella/GitHub/virtualclasstools/glove.6B.300d.txt.w2v")
     embeddings = embedDocs(cleaned_docs, glove, 300)
+    
+    print()
+    print("pairwise similarities")
     print(computeSim(embeddings))
