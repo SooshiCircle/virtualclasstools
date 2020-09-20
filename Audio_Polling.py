@@ -14,7 +14,7 @@ def loadGlove(path):
     glove = KeyedVectors.load_word2vec_format(path, binary=False)
     return glove
 
-glove = loadGlove("/Users/MeganFrisella/GitHub/virtualclasstools/glove.6B.300d.txt.w2v")
+glove = loadGlove("glove.6B.300d.txt.w2v")
 
 
 # -
@@ -108,7 +108,7 @@ def printBestWord(tf_idf, vocab):
 
 # Assesing response similarity to other students using GloVe embeddings
 
-def embedDocs(cleaned_docs, glove, glove_dim): 
+def embedDocs(cleaned_docs, glove, glove_dim):
     """
     Create an embedding for each doc by summing the embeddings of it's words (excluding stop words)
     """
@@ -132,15 +132,15 @@ def main(docs):
     """
     stops = getStopWords("stopwords.txt")
     cleaned_docs = cleanDocs(docs, stops)
-    
+
     # TF-IDF assessment
     vocab = getVocab(cleaned_docs)
     tf_idfs = tf_idf(vocab, cleaned_docs)
     printBestWord(tf_idfs, vocab)
-    
+
     # GloVe assessment
     embeddings = embedDocs(cleaned_docs, glove, 300)
-    
+
     print()
     print("pairwise similarities")
     print(computeSim(embeddings))
