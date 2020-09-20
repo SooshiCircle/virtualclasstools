@@ -12,7 +12,7 @@ This tool will help teachers create quick visualizations on their video feed to 
 
 Our second tool is vocal response polling.
 Students can verbally answer a professor’s question and the program will analyze their individual responses.
-We used SpeechRecognition[https://pypi.org/project/SpeechRecognition/] API for speech to text.
+We used SpeechRecognition (https://pypi.org/project/SpeechRecognition/) API for speech to text.
 We used TF-IDF values to summarize the most important words of  response.
 We also used GloVe embeddings to compute the similarity between student responses with the intention of forming appropriate breakout rooms.
 
