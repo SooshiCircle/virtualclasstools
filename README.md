@@ -26,4 +26,4 @@ This tool will help alert teachers to students who physically raise their hand, 
 With our virtual learning toolbox, we hope to provide access to many new and useful features in the realm of remote communication.
 
 ## Demos and Presentation
-For a graphical explanation of our project and live demos of each feature, please see our PowerPoint presentation, which can be found [here](https://drive.google.com/file/d/1Fj20_z3JTIZ620n88CUMj0fgCvyIIPBN/view?usp=sharing).
+For a graphical explanation of our project and live demos of each feature, please see our PowerPoint presentation, which can be found [here](https://drive.google.com/file/d/1Fj20_z3JTIZ620n88CUMj0fgCvyIIPBN/view?usp=sharing). A PDF version of the slides (no embedded videos or animated graphics) can be found [here](https://drive.google.com/file/d/1Qr_NVBswonCo8JGf1XHL6NHW70cgfDjR/view?usp=sharing).
