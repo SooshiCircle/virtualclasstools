@@ -1,6 +1,8 @@
 # Virtual Learning Toolbox
 ## Project Overview
 
+HackMIT 2020 Top 8 Project.
+
 It is not surprising, given the ongoing global pandemic, that the demand is high for remote learning and connectivity programs.
 As such, our team proposes a set of tools for virtual interaction that may better facilitate global communication during these solitary times.
 
